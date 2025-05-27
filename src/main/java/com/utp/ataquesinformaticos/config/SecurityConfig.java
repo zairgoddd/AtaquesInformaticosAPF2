@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/css/**", "/vendor/**", "/js/**",  "/imagenes/**", "/images/**",
                         "/img/**", "/uploads/**", "/assets/**", "/recursos/**",
-                        "/static/**", "/webjars/**"
+                        "/static/**", "/webjars/**",  "/api/**"
                 ).permitAll()
                         
                 // Rutas públicas

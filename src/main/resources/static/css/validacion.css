@@ -1,0 +1,164 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+background-image: url('../imagenes/12.png'); 
+  background-color: #0A2342;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container-form {
+  background-color: #fcfeff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+  text-align: center;
+  width: 90%;
+  max-width: 420px;
+  color: #FAD02E;
+  box-sizing: border-box;
+}
+
+h2 {
+  color: #3B82F6;
+  margin-bottom: 24px;
+  font-size: 2rem;
+}
+
+.container-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border: 2px solid #3b38e6;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background-color: #f9f9fa;
+  color: #000;
+  box-sizing: border-box;
+}
+
+.container-input input {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  flex: 1;
+  background-color: transparent;
+  color: #000;
+}
+
+.container-input ion-icon {
+  margin-right: 10px;
+  font-size: 18px;
+  color: #3b38e6;
+}
+
+.button {
+  background-color: #2563EB;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.button:hover {
+  background-color: #1D4ED8;
+}
+
+.additional-info p {
+  font-size: 14px;
+  margin-top: 15px;
+  color: #2e61fa;
+}
+
+.alert {
+  background-color: #ffe5e0;
+  color: #d32f2f;
+  border: 1px solid #ffcccc;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 480px) {
+  .container-form {
+    padding: 20px;
+    width: 95%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .container-input {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .container-input input {
+    margin-top: 8px;
+  }
+
+  .button {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .container-form {
+    padding: 30px;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+}
+/* Animations */
+@keyframes background-color-animation {
+    0% { background: #ffe6cc; }
+    100% { background: #ffdab9; }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    animation: fade-in 1s ease-in-out;
+}
+
+.animate-bounce {
+    animation: bounce 2s infinite;
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>| Login - Sistema de Gestión de Amenazas |</title>
+    <link th:href="@{/css/login2.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Icono -->
+    <link th:href="@{/imagenes/iconoAmenaza.png}" rel="icon" type="image/x-icon">
+</head>
+    
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>SecureSystem</span>
+                </div>
+            </div>
+            
+            <div class="form-container" id="loginForm">
+                <form method="post" th:action="@{/login}">
+                    <h2>Iniciar Sesión</h2>
+                    <p class="subtitle">Acceda a su panel de gestión de amenazas</p>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" name="username" placeholder="Username" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" name="password" id="password" placeholder="Password" required>
+                        <div class="toggle-password">
+                            <i class="fas fa-eye" id="togglePassword"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="forgot-password">
+                        <a href="#">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    
+                    <div th:if="${param.error}" class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Usuario o contraseña inválidos.
+                    </div>
+                    
+                    <button type="submit" class="btn-login">
+                        INICIAR SESIÓN
+                    </button>
+                    
+                    <div class="register-link">
+                        ¿No tienes cuenta? <a href="#" id="showRegister">Registrarse</a>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="form-container hidden" id="registerForm">
+                <form method="POST" th:action="@{/registrar}">
+                    <h2>Registrarse</h2>
+                    <p class="subtitle">Crea una cuenta para acceder al sistema</p>
+                    
+                    <div th:if="${registroExitoso}" class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        <span th:text="${registroExitoso}"></span>
+                    </div>
+                    
+                    <div th:if="${error}" class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span th:text="${error}"></span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" name="nombre" placeholder="Nombre" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" name="password" id="registerPassword" placeholder="Password" required>
+                        <div class="toggle-password">
+                            <i class="fas fa-eye" id="toggleRegisterPassword"></i>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-register">
+                        REGISTRARSE
+                    </button>
+                    
+                    <div class="login-link">
+                        ¿Ya tienes cuenta? <a href="#" id="showLogin">Iniciar Sesión</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="security-info">
+            <div class="info-content">
+                <h1>Sistema de Gestión de Amenazas</h1>
+                <p>Monitoreo y control de amenazas informáticas en tiempo real.</p>
+                <div class="security-features">
+                    <div class="feature">
+                        <i class="fas fa-search"></i>
+                        <span>Detección Avanzada</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Análisis de Patrones</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-shield-virus"></i>
+                        <span>Protección Continua</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script th:src="@{/js/login2.js}"></script>
+</body>
+</html>

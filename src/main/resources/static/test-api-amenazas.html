@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba API de Amenazas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .section {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        label {
+            display: inline-block;
+            width: 120px;
+            margin-bottom: 10px;
+        }
+        input, select {
+            padding: 8px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #resultado {
+            background-color: #e8f4fe;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #eee;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #f9f9f9;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sistema de Gestión de Amenazas Informáticas</h1>
+    
+    <div id="resultado">
+        <p>Resultado de la operación aparecerá aquí</p>
+    </div>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="openTab(event, 'tab-listar')">Listar Amenazas</div>
+        <div class="tab" onclick="openTab(event, 'tab-buscar')">Buscar por ID</div>
+        <div class="tab" onclick="openTab(event, 'tab-crear')">Crear Amenaza</div>
+        <div class="tab" onclick="openTab(event, 'tab-actualizar')">Actualizar Amenaza</div>
+        <div class="tab" onclick="openTab(event, 'tab-eliminar')">Eliminar Amenaza</div>
+        <div class="tab" onclick="openTab(event, 'tab-nivel')">Buscar por Nivel</div>
+    </div>
+    
+    <div id="tab-listar" class="tab-content active section">
+        <h2>Listar todas las amenazas (GET)</h2>
+        <button onclick="listarAmenazas()">Obtener Amenazas</button>
+    </div>
+    
+    <div id="tab-buscar" class="tab-content section">
+        <h2>Buscar amenaza por ID (GET)</h2>
+        <div>
+            <label for="buscar-id">ID de la amenaza:</label>
+            <input type="number" id="buscar-id" min="1">
+        </div>
+        <button onclick="buscarAmenaza()">Buscar</button>
+    </div>
+    
+    <div id="tab-crear" class="tab-content section">
+        <h2>Crear nueva amenaza (POST)</h2>
+        <form id="form-crear">
+            <div>
+                <label for="crear-tipo">Tipo:</label>
+                <input type="text" id="crear-tipo" required>
+            </div>
+            <div>
+                <label for="crear-descripcion">Descripción:</label>
+                <input type="text" id="crear-descripcion" required>
+            </div>
+            <div>
+                <label for="crear-nivel">Nivel de Riesgo:</label>
+                <select id="crear-nivel">
+                    <option value="BAJO">BAJO</option>
+                    <option value="MEDIO">MEDIO</option>
+                    <option value="ALTO">ALTO</option>
+                    <option value="CRITICO">CRITICO</option>
+                </select>
+            </div>
+            <div>
+                <label for="crear-fecha">Fecha de Detección:</label>
+                <input type="date" id="crear-fecha">
+            </div>
+        </form>
+        <button onclick="crearAmenaza()">Crear Amenaza</button>
+    </div>
+    
+    <div id="tab-actualizar" class="tab-content section">
+        <h2>Actualizar amenaza (PUT)</h2>
+        <form id="form-actualizar">
+            <div>
+                <label for="actualizar-id">ID:</label>
+                <input type="number" id="actualizar-id" min="1" required>
+                <button type="button" onclick="cargarDatosAmenaza()">Cargar datos</button>
+            </div>
+            <div>
+                <label for="actualizar-tipo">Tipo:</label>
+                <input type="text" id="actualizar-tipo" required>
+            </div>
+            <div>
+                <label for="actualizar-descripcion">Descripción:</label>
+                <input type="text" id="actualizar-descripcion" required>
+            </div>
+            <div>
+                <label for="actualizar-nivel">Nivel de Riesgo:</label>
+                <select id="actualizar-nivel">
+                    <option value="BAJO">BAJO</option>
+                    <option value="MEDIO">MEDIO</option>
+                    <option value="ALTO">ALTO</option>
+                    <option value="CRITICO">CRITICO</option>
+                </select>
+            </div>
+            <div>
+                <label for="actualizar-fecha">Fecha de Detección:</label>
+                <input type="date" id="actualizar-fecha">
+            </div>
+        </form>
+        <button onclick="actualizarAmenaza()">Actualizar Amenaza</button>
+    </div>
+    
+    <div id="tab-eliminar" class="tab-content section">
+        <h2>Eliminar amenaza (DELETE)</h2>
+        <div>
+            <label for="eliminar-id">ID de la amenaza:</label>
+            <input type="number" id="eliminar-id" min="1" required>
+        </div>
+        <button onclick="eliminarAmenaza()">Eliminar Amenaza</button>
+    </div>
+    
+    <div id="tab-nivel" class="tab-content section">
+        <h2>Buscar amenazas por nivel de riesgo (GET)</h2>
+        <div>
+            <label for="nivel-buscar">Nivel de Riesgo:</label>
+            <select id="nivel-buscar">
+                <option value="BAJO">BAJO</option>
+                <option value="MEDIO">MEDIO</option>
+                <option value="ALTO">ALTO</option>
+                <option value="CRITICO">CRITICO</option>
+            </select>
+        </div>
+        <button onclick="buscarPorNivel()">Buscar por Nivel</button>
+    </div>
+
+    <script>
+        // URL base de la API (cambiar si es necesario)
+        const API_BASE_URL = "http://localhost:8080/api/amenazas";
+        
+        // Función para mostrar resultados
+        function mostrarResultado(texto, esError = false) {
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = esError 
+                ? `<p style="color: red;">Error: ${texto}</p>` 
+                : `<pre>${texto}</pre>`;
+        }
+        
+        // Función para formatear JSON
+        function formatearJSON(datos) {
+            return JSON.stringify(datos, null, 2);
+        }
+        
+        // Cambiar entre pestañas
+        function openTab(evt, tabId) {
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+            
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].className = tabContents[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabId).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Listar todas las amenazas
+        async function listarAmenazas() {
+            try {
+                const response = await fetch(API_BASE_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                mostrarResultado(`Se encontraron ${data.length} amenazas:\n${formatearJSON(data)}`);
+            } catch (error) {
+                mostrarResultado(error.message, true);
+            }
+        }
+        
+        // Buscar amenaza por ID
+        async function buscarAmenaza() {
+            const id = document.getElementById('buscar-id').value;
+            if (!id) {
+                mostrarResultado("Por favor, ingresa un ID válido", true);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                mostrarResultado(`Amenaza encontrada:\n${formatearJSON(data)}`);
+            } catch (error) {
+                mostrarResultado(error.message, true);
+            }
+        }
+        
+        // Crear nueva amenaza
+        async function crearAmenaza() {
+            const tipo = document.getElementById('crear-tipo').value;
+            const descripcion = document.getElementById('crear-descripcion').value;
+            const nivelRiesgo = document.getElementById('crear-nivel').value;
+            const fechaDeteccion = document.getElementById('crear-fecha').value;
+            
+            if (!tipo || !descripcion) {
+                mostrarResultado("Por favor, completa los campos obligatorios", true);
+                return;
+            }
+            
+            const amenaza = {
+                tipo: tipo,
+                descripcion: descripcion,
+                nivelRiesgo: nivelRiesgo
+            };
+            
+            if (fechaDeteccion) {
+                amenaza.fechaDeteccion = fechaDeteccion;
+            }
+            
+            try {
+                const response = await fetch(API_BASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(amenaza)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                mostrarResultado(`Amenaza creada exitosamente:\n${formatearJSON(data)}`);
+                
+                // Limpiar formulario
+                document.getElementById('form-crear').reset();
+            } catch (error) {
+                mostrarResultado(error.message, true);
+            }
+        }
+        
+        // Cargar datos de una amenaza para actualizar
+        async function cargarDatosAmenaza() {
+            const id = document.getElementById('actualizar-id').value;
+            if (!id) {
+                mostrarResultado("Por favor, ingresa un ID válido", true);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const amenaza = await response.json();
+                
+                document.getElementById('actualizar-tipo').value = amenaza.tipo;
+                document.getElementById('actualizar-descripcion').value = amenaza.descripcion;
+                document.getElementById('actualizar-nivel').value = amenaza.nivelRiesgo;
+                
+                if (amenaza.fechaDeteccion) {
+                    document.getElementById('actualizar-fecha').value = amenaza.fechaDeteccion;
+                }
+                
+                mostrarResultado(`Datos cargados para actualizar la amenaza ID ${id}`);
+            } catch (error) {
+                mostrarResultado(error.message, true);
+            }
+        }
+        
+        // Actualizar amenaza
+        async function actualizarAmenaza() {
+            const id = document.getElementById('actualizar-id').value;
+            const tipo = document.getElementById('actualizar-tipo').value;
+            const descripcion = document.getElementById('actualizar-descripcion').value;
+            const nivelRiesgo = document.getElementById('actualizar-nivel').value;
+            const fechaDeteccion = document.getElementById('actualizar-fecha').value;
+            
+            if (!id || !tipo || !descripcion) {
+                mostrarResultado("Por favor, completa los campos obligatorios", true);
+                return;
+            }
+            
+            const amenaza = {
+                tipo: tipo,
+                descripcion: descripcion,
+                nivelRiesgo: nivelRiesgo
+            };
+            
+            if (fechaDeteccion) {
+                amenaza.fechaDeteccion = fechaDeteccion;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(amenaza)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                mostrarResultado(`Amenaza actualizada exitosamente:\n${formatearJSON(data)}`);
+            } catch (error) {
+                mostrarResultado(error.message, true);
+            }
+        }
+        
+        // Eliminar amenaza
+        async function eliminarAmenaza() {
+            const id = document.getElementById('eliminar-id').value;
+            if (!id) {
+                mostrarResultado("Por favor, ingresa un ID válido", true);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                mostrarResultado(`Amenaza con ID ${id} eliminada exitosamente.`);
+                document.getElementById('eliminar-id').value = "";
+            } catch (error) {
+                mostrarResultado(error.message, true);
+            }
+        }
+        
+        // Buscar por nivel de riesgo
+        async function buscarPorNivel() {
+            const nivel = document.getElementById('nivel-buscar').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/nivel/${nivel}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                mostrarResultado(`Se encontraron ${data.length} amenazas de nivel ${nivel}:\n${formatearJSON(data)}`);
+            } catch (error) {
+                mostrarResultado(error.message, true);
+            }
+        }
+    </script>
+</body>
+</html>

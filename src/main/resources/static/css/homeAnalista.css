@@ -1,0 +1,276 @@
+/* Estilos para el sidebar con esquema de colores del login */
+:root {
+    --primary-color: #2563eb;
+    --danger-color: #dc2626;
+    --success-color: #16a34a;
+    --warning-color: #eab308;
+    --dark-color: #1e293b;
+    --light-color: #f8fafc;
+    --gray-color: #64748b;
+    --sidebar-color: #1e293b;
+}
+
+.sidebar {
+    background-color: var(--sidebar-color);
+    min-height: 100vh;
+    color: white;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+     background-image: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%23124f8f' stroke-width='1'%3E%3Cpath d='M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63'/%3E%3Cpath d='M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764'/%3E%3Cpath d='M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880'/%3E%3Cpath d='M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382'/%3E%3Cpath d='M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269'/%3E%3C/g%3E%3Cg fill='%2300b8ff' opacity='0.05'%3E%3Ccircle cx='769' cy='229' r='5'/%3E%3Ccircle cx='539' cy='269' r='5'/%3E%3Ccircle cx='603' cy='493' r='5'/%3E%3Ccircle cx='731' cy='737' r='5'/%3E%3Ccircle cx='520' cy='660' r='5'/%3E%3Ccircle cx='309' cy='538' r='5'/%3E%3Ccircle cx='295' cy='764' r='5'/%3E%3Ccircle cx='40' cy='599' r='5'/%3E%3Ccircle cx='102' cy='382' r='5'/%3E%3Ccircle cx='127' cy='80' r='5'/%3E%3Ccircle cx='370' cy='105' r='5'/%3E%3Ccircle cx='578' cy='42' r='5'/%3E%3Ccircle cx='237' cy='261' r='5'/%3E%3Ccircle cx='390' cy='382' r='5'/%3E%3C/g%3E%3C/svg%3E"),
+        radial-gradient(circle at top right, rgba(0, 184, 255, 0.08) 0%, transparent 70%),
+        radial-gradient(circle at bottom left, rgba(14, 77, 146, 0.1) 0%, transparent 70%);
+}
+
+.sidebar-content {
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.sidebar a.text-decoration-none {
+    color: white;
+    font-weight: 600;
+}
+
+.sidebar a.text-decoration-none i {
+    color: var(--primary-color);
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.sidebar .nav-link:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(3px);
+}
+
+.sidebar .nav-link.active {
+    color: white;
+    font-weight: 600;
+    background-color: var(--primary-color);
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+}
+
+.sidebar .nav-link i {
+    width: 24px;
+    text-align: center;
+}
+
+.sidebar hr {
+    opacity: 0.15;
+    border-color: white;
+}
+
+/* Estilos para el dropdown del usuario */
+.sidebar .dropdown-menu {
+    background-color: #2d3748;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.sidebar .dropdown-item {
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.6rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.sidebar .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.sidebar .dropdown-divider {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Botón de cerrar sesión */
+.sidebar .btn-danger {
+    background-color: var(--danger-color);
+    border: none;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.sidebar .btn-danger:hover {
+    background-color: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(220, 38, 38, 0.3);
+}
+
+
+/* Estilos para el contenido principal */
+.main-content {
+    padding-left: 0;
+    transition: padding-left 0.3s;
+}
+
+/* Estilos para las cards del dashboard */
+.card-dashboard {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.bg-info-light {
+    background-color: rgba(37, 99, 235, 0.1);
+    color: var(--primary-color);
+}
+
+.bg-warning-light {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: var(--warning-color);
+}
+
+.bg-danger-light {
+    background-color: rgba(220, 38, 38, 0.1);
+    color: var(--danger-color);
+}
+
+.bg-success-light {
+    background-color: rgba(22, 163, 74, 0.1);
+    color: var(--success-color);
+}
+
+/* Estilos mejorados para la sección de información del rol */
+.role-info-section {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(67, 56, 202, 0.15) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: auto;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.role-info-section:hover {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(67, 56, 202, 0.2) 100%);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.role-info-text {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.role-info-text i {
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+/* Estilos mejorados para los badges de rol */
+.role-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.role-badge.bg-danger {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+    color: white !important;
+}
+
+.role-badge.bg-warning {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
+    color: #1e293b !important;
+    font-weight: 700;
+}
+
+.role-badge.bg-info {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    color: white !important;
+}
+
+
+
+/* Media queries para responsividad */
+@media (max-width: 767.98px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        min-height: auto;
+    }
+    
+    .main-content {
+        padding-left: 0 !important;
+    }
+}
+/* Ocultar sidebar en pantallas pequeñas por defecto */
+.sidebar {
+    width: 250px;
+    transition: transform 0.3s ease-in-out;
+}
+
+@media (max-width: 767.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        width: 220px;
+        z-index: 2000;
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1500;
+    }
+
+    .sidebar-backdrop.show {
+        display: block;
+    }
+
+    .toggle-sidebar-btn {
+        display: inline-block;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background-color: var(--primary-color);
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+        z-index: 2500;
+    }
+}
+

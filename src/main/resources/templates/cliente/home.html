@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Dashboard Cliente - SecureSystem</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <link th:href="@{/css/homeAnalista.css}" rel="stylesheet">
+        <link th:href="@{/imagenes/iconoAmenaza.png}" rel="icon" type="image/x-icon">
+    </head>
+    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+
+        <div class="container-fluid p-0">
+            <div class="row g-0">
+
+                <div th:replace="~{fragments/sidebar :: sidebarWithActive}"></div>
+
+                <!-- Contenido principal -->
+                <main class="col main-content">
+                    <div class="px-4 py-3">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Dashboard de Seguridad - Solo Clientes ! </h1>
+                            <div class="badge bg-info fs-6">
+                                <i class="fas fa-eye me-1"></i>
+                                Modo Solo Lectura
+                            </div>
+                        </div>
+
+                        <!-- Alertas importantes -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-warning" th:if="${amenazasCriticas > 0}">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Atención:</strong> Se han detectado <span th:text="${amenazasCriticas}">0</span> amenazas críticas que requieren su atención.
+                                </div>
+                                <div class="alert alert-success" th:if="${amenazasCriticas == 0}">
+                                    <i class="fas fa-shield-alt me-2"></i>
+                                    <strong>Sistema Seguro:</strong> No se han detectado amenazas críticas en este momento.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estadísticas generales -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-title">Total Amenazas</h6>
+                                                <h2 class="mb-0" th:text="${totalAmenazas}">0</h2>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-title">Ataques Registrados</h6>
+                                                <h2 class="mb-0" th:text="${totalAtaques}">0</h2>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-bug fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-danger text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-title">Amenazas Críticas</h6>
+                                                <h2 class="mb-0" th:text="${amenazasCriticas}">0</h2>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-fire fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="card-title">Estado del Sistema: </h6>
+                                                <h2 class="mb-0" th:text="${amenazasCriticas == 0 ? 'ES SEGURO!' : 'EN ALERTA!'}">SEGURO</h2>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-shield-alt fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico de amenazas por nivel de riesgo -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Distribución de Amenazas por Nivel de Riesgo</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-danger-light">
+                                                    <h4 class="text-danger" th:text="${amenazasCriticas}">0</h4>
+                                                    <small>Críticas</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-warning-light">
+                                                    <h4 class="text-warning" th:text="${amenazasAltas}">0</h4>
+                                                    <small>Altas</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-info-light">
+                                                    <h4 class="text-info" th:text="${amenazasMedias}">0</h4>
+                                                    <small>Medios</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-success-light">
+                                                    <h4 class="text-success" th:text="${amenazasBajas}">0</h4>
+                                                    <small>Bajas</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Ataques por Severidad</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-danger-light">
+                                                    <h4 class="text-danger" th:text="${ataquesCriticos}">0</h4>
+                                                    <small>Críticos</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-success-light">
+                                                    <h4 class="text-warning" th:text="${ataquesAltos}">0</h4>
+                                                    <small>Altos</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-success-light">
+                                                    <h4 class="text-info" th:text="${ataquesModerados}">0</h4>
+                                                    <small>Moderados</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-3">
+                                                <div class="p-3 border rounded bg-success-light">
+                                                    <h4 class="text-success" th:text="${ataquesBajos}">0</h4>
+                                                    <small>Bajos</small>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Amenazas recientes -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0">Amenazas Recientes</h5>
+                                        <a th:href="@{/amenazas}" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div th:if="${#lists.isEmpty(ultimasAmenazas)}" class="text-muted text-center py-3">
+                                            <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                                            <p>No hay amenazas recientes</p>
+                                        </div>
+                                        <div th:each="amenaza : ${ultimasAmenazas}" class="border-bottom pb-2 mb-2">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="mb-1" th:text="${amenaza.tipo}">Tipo de Amenaza</h6>
+                                                    <small class="text-muted" th:text="${#strings.abbreviate(amenaza.descripcion, 80)}">Descripción</small>
+                                                </div>
+                                                <span th:class="${
+                                                      amenaza.nivelRiesgo.name() == 'CRITICO' ? 'badge bg-danger' : 
+                                                      amenaza.nivelRiesgo.name() == 'ALTO' ? 'badge bg-warning' : 
+                                                      amenaza.nivelRiesgo.name() == 'MEDIO' ? 'badge bg-primary' : 'badge bg-success'
+                                                      }"
+                                                      th:text="${amenaza.nivelRiesgo}">
+                                                </span>
+                                            </div>
+                                            <small class="text-muted" th:text="${#temporals.format(amenaza.fechaDeteccion, 'dd/MM/yyyy')}">Fecha</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0">Ataques Recientes</h5>
+                                        <a th:href="@{/ataques}" class="btn btn-sm btn-outline-warning">Ver Todos</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <div th:if="${#lists.isEmpty(ultimosAtaques)}" class="text-muted text-center py-3">
+                                            <i class="fas fa-bug fa-2x mb-2"></i>
+                                            <p>No hay ataques recientes</p>
+                                        </div>
+                                        <div th:each="ataque : ${ultimosAtaques}" class="border-bottom pb-2 mb-2">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="mb-1" th:text="${ataque.tipo}">Tipo de Ataque</h6>
+                                                    <small class="text-muted" th:text="${ataque.sistemaAfectado}">Sistema Afectado</small>
+                                                </div>
+                                                <span th:class="${
+                                                      ataque.severidad.name() == 'CRITICA' ? 'badge bg-danger' : 
+                                                      ataque.severidad.name() == 'ALTA' ? 'badge bg-warning' : 
+                                                      ataque.severidad.name() == 'MODERADA' ? 'badge bg-primary' : 'badge bg-success'
+                                                      }"
+                                                      th:text="${ataque.severidad}">
+                                                </span>
+                                            </div>
+                                            <small class="text-muted" th:text="${#temporals.format(ataque.fechaEvento, 'dd/MM/yyyy')}">Fecha</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script th:src="@{/js/homeAnalista.js}"></script>
+    </body>
+</html>

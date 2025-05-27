@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Detalle de Amenaza</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/> 
+        <!-- CSS Customizado -->
+        <link th:href="@{/css/homeAnalista.css}" rel="stylesheet">
+        <!-- Icono -->
+        <link th:href="@{/imagenes/iconoAmenaza.png}" rel="icon" type="image/x-icon">
+    </head>
+    <body>
+        <div class="container-fluid p-0">
+            <div class="row g-0">
+
+                <div th:replace="~{fragments/sidebar :: sidebarWithActive}"></div>
+
+                <!-- Contenido principal -->
+                <main class="col main-content">
+                    <div class="px-4 py-3">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Detalle de Amenaza</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <a th:href="@{/amenazas}" class="btn btn-secondary me-2">
+                                    <i class="fas fa-arrow-left"></i> Volver
+                                </a>
+
+                                <!-- Solo ADMINISTRADOR y ANALISTA pueden EDITAR amenazas -->
+                                <div sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_ANALISTA')">
+                                    <a th:href="@{/amenazas/editar/{id}(id=${amenaza.id})}" class="btn btn-primary">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta de información de la amenaza -->
+                        <div class="row mb-4">
+                            <div class="col-lg-12">
+                                <div class="card shadow-sm">
+                                    <div class="card-header" th:classappend="${
+                                         amenaza.nivelRiesgo.name() == 'CRITICO' ? 'bg-danger text-white' : 
+                                         amenaza.nivelRiesgo.name() == 'ALTO' ? 'bg-warning' : 
+                                         amenaza.nivelRiesgo.name() == 'MEDIO' ? 'bg-primary text-white' : 'bg-success text-white'
+                                         }">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">Información de la Amenaza</h5>
+                                            <span class="badge bg-light text-dark" th:text="${'ID: ' + amenaza.id}">ID: 1</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <h5 class="text-muted">Tipo de Amenaza</h5>
+                                                    <h3 th:text="${amenaza.tipo}">Phishing</h3>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <h5 class="text-muted">Nivel de Riesgo</h5>
+                                                    <span th:class="${
+                                                          amenaza.nivelRiesgo.name() == 'CRITICO' ? 'badge bg-danger' : 
+                                                          amenaza.nivelRiesgo.name() == 'ALTO' ? 'badge bg-warning' : 
+                                                          amenaza.nivelRiesgo.name() == 'MEDIO' ? 'badge bg-primary' : 'badge bg-success'
+                                                          }" 
+                                                          style="font-size: 1rem; padding: 0.5rem 1rem;"
+                                                          th:text="${amenaza.nivelRiesgo}">CRÍTICO</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <h5 class="text-muted">Fecha de Detección</h5>
+                                                    <p class="fs-5" th:text="${#temporals.format(amenaza.fechaDeteccion, 'dd/MM/yyyy')}">15/04/2025</p>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <h5 class="text-muted">Cantidad de Ataques Relacionados</h5>
+                                                    <p class="fs-5" th:text="${amenaza.ataques != null ? amenaza.ataques.size() : 0}">3</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <h5 class="text-muted">Descripción</h5>
+                                                <div class="p-3 bg-light rounded">
+                                                    <p class="mb-0" th:text="${amenaza.descripcion}">Descripción detallada de la amenaza...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ataques relacionados -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-dark text-white">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">Ataques Relacionados</h5>
+                                            <!-- Solo ADMINISTRADOR y ANALISTA pueden crear amenazas -->
+                                            <div sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_ANALISTA')">
+                                                <a th:href="@{/ataques/nuevo}" class="btn btn-sm btn-light">
+                                                    <i class="fas fa-plus-circle"></i> Agregar Ataque
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div th:if="${amenaza.ataques == null || amenaza.ataques.isEmpty()}" class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i> No hay ataques relacionados con esta amenaza.
+                                        </div>
+
+                                        <div th:if="${amenaza.ataques != null && !amenaza.ataques.isEmpty()}" class="table-responsive">
+                                            <table class="table table-hover align-middle">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Tipo</th>
+                                                        <th>Vector</th>
+                                                        <th>Sistema Afectado</th>
+                                                        <th>Severidad</th>
+                                                        <th>Fecha</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr th:each="ataque : ${amenaza.ataques}" th:class="${
+                                                        ataque.severidad.name() == 'CRITICA' ? 'table-danger' : 
+                                                        ataque.severidad.name() == 'ALTA' ? 'table-warning' : 
+                                                        ataque.severidad.name() == 'MODERADA' ? 'table-info' : 'table-success'
+                                                        }">
+                                                        <td th:text="${ataque.id}">1</td>
+                                                        <td th:text="${ataque.tipo}">Malware</td>
+                                                        <td th:text="${ataque.vector}">Email</td>
+                                                        <td th:text="${ataque.sistemaAfectado}">Windows Server</td>
+                                                        <td>
+                                                            <span th:class="${
+                                                                  ataque.severidad.name() == 'CRITICA' ? 'badge bg-danger' : 
+                                                                  ataque.severidad.name() == 'ALTA' ? 'badge bg-warning' : 
+                                                                  ataque.severidad.name() == 'MODERADA' ? 'badge bg-primary' : 'badge bg-success'
+                                                                  }"
+                                                                  th:text="${ataque.severidad}">
+                                                            </span>
+                                                        </td>
+                                                        <td th:text="${#temporals.format(ataque.fechaEvento, 'dd/MM/yyyy')}">20/04/2025</td>
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a th:href="@{/ataques/detalle/{id}(id=${ataque.id})}" class="btn btn-sm btn-outline-info">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+
+                                                                <!-- Solo ADMINISTRADOR y ANALISTA pueden crear amenazas -->
+                                                                <div sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR', 'ROLE_ANALISTA')">
+                                                                    <a th:href="@{/ataques/editar/{id}(id=${ataque.id})}" class="btn btn-sm btn-outline-primary">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                </div>
+
+
+                                                                <!-- Solo ADMINISTRADOR -->
+                                                                <div sec:authorize="hasAnyRole('ROLE_ADMINISTRADOR')">
+                                                                    <a th:href="@{/ataques/eliminar/{id}(id=${ataque.id})}" class="btn btn-sm btn-outline-danger"
+                                                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este ataque?')">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script th:src="@{/js/homeAnalista.js}"></script>
+    </body>
+</html>

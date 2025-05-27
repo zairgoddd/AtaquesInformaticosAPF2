@@ -1,0 +1,350 @@
+<!-- Guardar como: templates/fragments/sidebar.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <body>
+       <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>   
+        <!-- Fragmento principal del sidebar dinámico -->
+        <div th:fragment="sidebarByRole" class="col-md-3 col-lg-2 sidebar">
+            <div class="sidebar-content d-flex flex-column p-4 h-100">
+                <!-- Logo -->
+                <a href="/" class="d-flex align-items-center mb-4 text-white text-decoration-none">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    <span class="fs-4">SecureSystem</span>
+                </a>
+
+                <!-- Información de usuario -->
+                <div class="dropdown mb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" 
+                       id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle fs-4 me-2"></i>
+                        <strong th:text="${usuario != null ? usuario.nombre : 'Usuario'}">Usuario</strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">Perfil</a></li>
+                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                    </ul>
+                </div>
+                <hr class="mb-4">
+
+                <!-- Navegación principal - ADMINISTRADOR -->
+                <div sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/administrador/home}" class="nav-link py-2 px-3">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/administrador/usuarios}" class="nav-link py-2 px-3">
+                                <i class="fas fa-users me-2"></i>
+                                Gestión de Usuarios
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/amenazas}" class="nav-link py-2 px-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Amenazas
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/ataques}" class="nav-link py-2 px-3">
+                                <i class="fas fa-bug me-2"></i>
+                                Ataques
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/reportes}" class="nav-link py-2 px-3">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Reportes
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/administrador/configuracion}" class="nav-link py-2 px-3">
+                                <i class="fas fa-cog me-2"></i>
+                                Configuración del Sistema
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/logs}" class="nav-link py-2 px-3">
+                                <i class="fas fa-file-alt me-2"></i>
+                                Logs del Sistema
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Navegación principal - ANALISTA -->
+                <div sec:authorize="hasRole('ROLE_ANALISTA')">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/analista/home}" class="nav-link py-2 px-3">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/amenazas}" class="nav-link py-2 px-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Amenazas
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/ataques}" class="nav-link py-2 px-3">
+                                <i class="fas fa-bug me-2"></i>
+                                Ataques
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/reportes}" class="nav-link py-2 px-3">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Reportes
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/configuracion}" class="nav-link py-2 px-3">
+                                <i class="fas fa-cog me-2"></i>
+                                Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Navegación para otros roles (si los hay) -->
+                <div sec:authorize="hasRole('ROLE_USUARIO')">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/usuario/home}" class="nav-link py-2 px-3">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/reportes}" class="nav-link py-2 px-3">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Ver Reportes
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Sección de información del rol mejorada -->
+                <div class="role-info-section">
+                    <div class="role-info-text">
+                        <i class="fas fa-user-tag"></i>
+                        <span>Rol:</span>
+                        <span sec:authorize="hasRole('ROLE_ADMINISTRADOR')" class="role-badge bg-danger">ADMIN</span>
+                        <span sec:authorize="hasRole('ROLE_ANALISTA')" class="role-badge bg-warning">ANALISTA</span>
+                        <span sec:authorize="hasRole('ROLE_USUARIO')" class="role-badge bg-info">USUARIO</span>
+                    </div>
+                </div>
+
+                <!-- Botón cerrar sesión -->
+                <form th:action="@{/logout}" method="post" class="mt-2" 
+                      onsubmit="return confirm('¿Estás seguro que deseas cerrar sesión?');">
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        CERRAR SESIÓN
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Fragmento adicional CON navegación activa -->
+        <div th:fragment="sidebarWithActive" class="col-md-3 col-lg-2 sidebar">
+            <div class="sidebar-content d-flex flex-column p-4 h-100">
+                <!-- Logo -->
+                <a href="/" class="d-flex align-items-center mb-4 text-white text-decoration-none">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    <span class="fs-4">SecureSystem</span>
+                </a>
+
+                <!-- Información de usuario -->
+                <div class="dropdown mb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" 
+                       id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle fs-4 me-2"></i>
+                        <strong th:text="${usuario != null ? usuario.nombre : 'Usuario'}">Usuario</strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser2">
+                        <li><a class="dropdown-item" href="#">Perfil</a></li>
+                        <li><a class="dropdown-item" href="#">Configuración</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                    </ul>
+                </div>
+                <hr class="mb-4">
+
+                <!-- Navegación principal - ADMINISTRADOR -->
+                <div sec:authorize="hasRole('ROLE_ADMINISTRADOR')">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/administrador/home}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'dashboard' ? 'active' : ''}">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/administrador/usuarios}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'usuarios' ? 'active' : ''}">
+                                <i class="fas fa-users me-2"></i>
+                                Gestión de Usuarios
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/amenazas}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'amenazas' ? 'active' : ''}">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Amenazas
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/ataques}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'ataques' ? 'active' : ''}">
+                                <i class="fas fa-bug me-2"></i>
+                                Ataques
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/reportes}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'reportes' ? 'active' : ''}">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Reportes
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/administrador/configuracion}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'configuracion' ? 'active' : ''}">
+                                <i class="fas fa-cog me-2"></i>
+                                Configuración del Sistema
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Navegación principal - ANALISTA -->
+                <div sec:authorize="hasRole('ROLE_ANALISTA')">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/analista/home}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'dashboard' ? 'active' : ''}">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/amenazas}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'amenazas' ? 'active' : ''}">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Amenazas
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/ataques}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'ataques' ? 'active' : ''}">
+                                <i class="fas fa-bug me-2"></i>
+                                Ataques
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/reportes}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'reportes' ? 'active' : ''}">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Reportes
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/configuracion}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'configuracion' ? 'active' : ''}">
+                                <i class="fas fa-cog me-2"></i>
+                                Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <!-- Navegación principal - CLIENTE -->
+                <div sec:authorize="hasRole('ROLE_CLIENTE')">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/cliente/home}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'dashboard' ? 'active' : ''}">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/amenazas}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'amenazas' ? 'active' : ''}">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Amenazas
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/ataques}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'ataques' ? 'active' : ''}">
+                                <i class="fas fa-bug me-2"></i>
+                                Ataques
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/contacto}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'reportes' ? 'active' : ''}">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Contactar
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a th:href="@{/configuracion}" 
+                               class="nav-link py-2 px-3"
+                               th:classappend="${currentPage == 'configuracion' ? 'active' : ''}">
+                                <i class="fas fa-cog me-2"></i>
+                                Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Sección de información del rol -->
+                <!-- Sección de información del rol mejorada -->
+                <div class="role-info-section">
+                    <div class="role-info-text">
+                        <i class="fas fa-user-tag"></i>
+                        <span>Rol:</span>
+                        <span sec:authorize="hasRole('ROLE_ADMINISTRADOR')" class="role-badge bg-danger">ADMIN</span>
+                        <span sec:authorize="hasRole('ROLE_ANALISTA')" class="role-badge bg-warning">ANALISTA</span>
+                        <span sec:authorize="hasRole('ROLE_CLIENTE')" class="role-badge bg-info">CLIENTE</span>
+                    </div>
+                </div>
+
+                <!-- Botón cerrar sesión -->
+                <form th:action="@{/logout}" method="post" class="mt-2" 
+                      onsubmit="return confirm('¿Estás seguro que deseas cerrar sesión?');">
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        CERRAR SESIÓN
+                    </button>
+                </form>
+            </div>
+        </div>
+    </body>
+    <script th:src="@{/js/homeAnalista.js}"></script>
+</html>

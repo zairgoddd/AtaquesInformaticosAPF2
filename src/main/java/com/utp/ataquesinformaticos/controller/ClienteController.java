@@ -73,8 +73,8 @@ public class ClienteController {
     
    
     
-    @GetMapping("/reportes")
-    public String reportesCliente(Authentication authentication, Model model) {
+    @GetMapping("/contacto")
+    public String contactosCliente(Authentication authentication, Model model) {
         // Verificar rol
         if (!authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENTE"))) {
@@ -84,17 +84,11 @@ public class ClienteController {
         SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
         Usuario usuarioActual = userDetails.getUsuario();
         
-        // Datos para reportes
-        Map<String, Integer> amenazasPorTipo = amenazaService.contarAmenazasPorTipo();
-        Map<String, Integer> ataquesPorTipo = ataqueService.contarAtaquesPorTipo();
-        Map<String, Integer> ataquesPorMes = ataqueService.contarAtaquesPorMes();
         
         model.addAttribute("usuario", usuarioActual);
-        model.addAttribute("amenazasPorTipo", amenazasPorTipo);
-        model.addAttribute("ataquesPorTipo", ataquesPorTipo);
-        model.addAttribute("ataquesPorMes", ataquesPorMes);
-        
-        return "cliente/reportes";
+         model.addAttribute("currentPage", "contactos");
+
+        return "cliente/contact";
     }
     
 }

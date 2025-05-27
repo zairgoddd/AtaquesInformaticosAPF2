@@ -1,50 +1,54 @@
 package com.utp.ataquesinformaticos.service;
 
-import com.utp.ataquesinformaticos.dto.*;
+import com.utp.ataquesinformaticos.dto.AmenazaDTO;
 import com.utp.ataquesinformaticos.exception.ResourceNotFoundException;
-import com.utp.ataquesinformaticos.model.*;
-import com.utp.ataquesinformaticos.repository.*;
+import com.utp.ataquesinformaticos.model.Amenaza;
+import com.utp.ataquesinformaticos.model.NivelRiesgo;
+import com.utp.ataquesinformaticos.repository.AmenazaRepository;
 import jakarta.persistence.EntityNotFoundException;
+
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AmenazaService {
 
     private final AmenazaRepository amenazaRepository;
-    
+
     @Autowired
     public AmenazaService(AmenazaRepository amenazaRepository) {
         this.amenazaRepository = amenazaRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<AmenazaDTO> listarTodasLasAmenazas() {
         return amenazaRepository.findAll().stream()
                 .map(AmenazaDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public AmenazaDTO buscarPorId(Integer id) {
         Amenaza amenaza = amenazaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Amenaza no encontrada con id: " + id));
         return AmenazaDTO.fromEntity(amenaza);
     }
 
-    // Método para buscar amenaza por ID
+    @Transactional(readOnly = true)
     public Amenaza findById(Integer amenazaId) {
         return amenazaRepository.findById(amenazaId)
                 .orElseThrow(() -> new EntityNotFoundException("Amenaza con ID " + amenazaId + " no encontrada"));
     }
 
+    @Transactional
     public AmenazaDTO guardarAmenaza(AmenazaDTO amenazaDTO) {
         Amenaza amenaza = new Amenaza();
         amenaza.setTipo(amenazaDTO.getTipo());
@@ -57,6 +61,7 @@ public class AmenazaService {
         return AmenazaDTO.fromEntity(savedAmenaza);
     }
 
+    @Transactional
     public AmenazaDTO actualizarAmenaza(Integer id, AmenazaDTO amenazaDTO) {
         Amenaza amenaza = amenazaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Amenaza no encontrada con id: " + id));
@@ -72,6 +77,7 @@ public class AmenazaService {
         return AmenazaDTO.fromEntity(updatedAmenaza);
     }
 
+    @Transactional
     public void eliminarAmenaza(Integer id) {
         if (!amenazaRepository.existsById(id)) {
             throw new ResourceNotFoundException("Amenaza no encontrada con id: " + id);
@@ -79,53 +85,31 @@ public class AmenazaService {
         amenazaRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<AmenazaDTO> buscarPorNivelRiesgo(NivelRiesgo nivelRiesgo) {
         return amenazaRepository.findByNivelRiesgo(nivelRiesgo).stream()
                 .map(AmenazaDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<Amenaza> findAll() {
         return amenazaRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public long countAllAmenazas() {
         return amenazaRepository.count();
     }
 
-    // Método para obtener las amenazas recientes (por ejemplo, las ultimas 4)
+    @Transactional(readOnly = true)
     public List<Amenaza> findRecentAmenazas() {
         Pageable pageable = PageRequest.of(0, 4, Sort.by("fechaDeteccion").descending());
         return amenazaRepository.findAll(pageable).getContent();
     }
 
-    //
+    @Transactional(readOnly = true)
     public int contarAmenazasPorNivelRiesgo(NivelRiesgo nivelRiesgo) {
         return amenazaRepository.findByNivelRiesgo(nivelRiesgo).size();
-    }
-    
-    // Contar amenazas por nivel de riesgo
-    public int contarAmenazasPorNivel(NivelRiesgo nivelRiesgo) {
-        return amenazaRepository.countByNivelRiesgo(nivelRiesgo);
-    }
-    
-    // Encontrar amenazas por nivel de riesgo
-    public List<Amenaza> findAmenazasByNivelRiesgo(NivelRiesgo nivelRiesgo) {
-        return amenazaRepository.findByNivelRiesgo(nivelRiesgo);
-    }
-    
-    // Contar amenazas por tipo
-    public Map<String, Integer> contarAmenazasPorTipo() {
-        List<Object[]> results = amenazaRepository.countByTipo();
-        Map<String, Integer> map = new HashMap<>();
-        for (Object[] result : results) {
-            map.put((String) result[0], ((Long) result[1]).intValue());
-        }
-        return map;
-    }
-    
-    // Obtener todas las amenazas
-    public List<Amenaza> findAllAmenazas() {
-        return amenazaRepository.findAll();
     }
 }

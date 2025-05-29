@@ -5,9 +5,9 @@ Aplicación web desarrollada para la gestión y análisis de ataques informátic
 ## 🛠️ Tecnologías Utilizadas
 
 - **Backend**: Java
-- **Frontend**: HTML, CSS, JavaScript
+- **Frontend**: HTML, CSS, JavaScript, Thymeleaf
 - **Base de Datos**: MySQL Workbench
-- **Framework**: Spring Boot (si aplica)
+- **Framework**: Spring Boot 
 
 ## 📋 Configuración de Base de Datos
 
@@ -29,7 +29,7 @@ spring.datasource.password=tu_contraseña
 
 ### Credenciales de Acceso
 
-| Tipo de Usuario | Usuario | Contraseña | Rol/Permisos |
+| Tipo de Usuario | User | Contraseña | Rol/Permisos |
 |----------------|---------|------------|--------------|
 | Administrador  | admin   | admin123   | Acceso completo |
 | Analista       | analista | analista12345 | Análisis limitado |

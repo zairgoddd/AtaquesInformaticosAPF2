@@ -47,10 +47,10 @@ public class ClienteController {
         int ataquesAltos = ataqueService.contarAtaquesPorSeveridad(Severidad.ALTA);
         int ataquesModerados = ataqueService.contarAtaquesPorSeveridad(Severidad.MODERADA);
         
-        int amenazasCriticas = amenazaService.contarAmenazasPorNivel(NivelRiesgo.CRITICO);
-        int amenazasAltas = amenazaService.contarAmenazasPorNivel(NivelRiesgo.ALTO);
-        int amenazasMedias = amenazaService.contarAmenazasPorNivel(NivelRiesgo.MEDIO);
-        int amenazasBajas = amenazaService.contarAmenazasPorNivel(NivelRiesgo.BAJO);
+        int amenazasCriticas = amenazaService.contarAmenazasPorNivelRiesgo(NivelRiesgo.CRITICO);
+        int amenazasAltas = amenazaService.contarAmenazasPorNivelRiesgo(NivelRiesgo.ALTO);
+        int amenazasMedias = amenazaService.contarAmenazasPorNivelRiesgo(NivelRiesgo.MEDIO);
+        int amenazasBajas = amenazaService.contarAmenazasPorNivelRiesgo(NivelRiesgo.BAJO);
         
         // Añadir atributos al modelo
         model.addAttribute("usuario", usuarioActual);

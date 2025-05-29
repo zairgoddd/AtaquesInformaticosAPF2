@@ -1,20 +1,23 @@
 package com.utp.ataquesinformaticos.service;
 
-import com.utp.ataquesinformaticos.dto.*;
+import com.utp.ataquesinformaticos.dto.AtaqueDTO;
 import com.utp.ataquesinformaticos.exception.ResourceNotFoundException;
-import com.utp.ataquesinformaticos.model.*;
-import com.utp.ataquesinformaticos.repository.*;
+import com.utp.ataquesinformaticos.model.Amenaza;
+import com.utp.ataquesinformaticos.model.Ataque;
+import com.utp.ataquesinformaticos.model.Severidad;
+import com.utp.ataquesinformaticos.repository.AmenazaRepository;
+import com.utp.ataquesinformaticos.repository.AtaqueRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AtaqueService {
@@ -28,26 +31,28 @@ public class AtaqueService {
         this.amenazaRepository = amenazaRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<AtaqueDTO> listarTodosLosAtaques() {
         return ataqueRepository.findAll().stream()
                 .map(AtaqueDTO::fromEntity)
                 .collect(Collectors.toList());
     }
-    
-    // Método para buscar ataque por ID
+
+    @Transactional(readOnly = true)
     public Ataque findById(Integer ataqueId) {
         return ataqueRepository.findById(ataqueId)
                 .orElseThrow(() -> new EntityNotFoundException("Ataque con ID " + ataqueId + " no encontrado"));
     }
 
+    @Transactional(readOnly = true)
     public AtaqueDTO buscarPorId(Integer id) {
         Ataque ataque = ataqueRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ataque no encontrado con id: " + id));
         return AtaqueDTO.fromEntity(ataque);
     }
 
+    @Transactional
     public AtaqueDTO guardarAtaque(AtaqueDTO ataqueDTO) {
-        // Validar que exista la amenaza asociada
         Amenaza amenaza = null;
         if (ataqueDTO.getAmenazaId() != null) {
             amenaza = amenazaRepository.findById(ataqueDTO.getAmenazaId())
@@ -67,11 +72,11 @@ public class AtaqueService {
         return AtaqueDTO.fromEntity(savedAtaque);
     }
 
+    @Transactional
     public AtaqueDTO actualizarAtaque(Integer id, AtaqueDTO ataqueDTO) {
         Ataque ataque = ataqueRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ataque no encontrado con id: " + id));
 
-        // Actualizar amenaza asociada si cambió
         if (ataqueDTO.getAmenazaId() != null) {
             Amenaza amenaza = amenazaRepository.findById(ataqueDTO.getAmenazaId())
                     .orElseThrow(() -> new ResourceNotFoundException("Amenaza no encontrada con id: " + ataqueDTO.getAmenazaId()));
@@ -90,6 +95,7 @@ public class AtaqueService {
         return AtaqueDTO.fromEntity(updatedAtaque);
     }
 
+    @Transactional
     public void eliminarAtaque(Integer id) {
         if (!ataqueRepository.existsById(id)) {
             throw new ResourceNotFoundException("Ataque no encontrado con id: " + id);
@@ -97,70 +103,38 @@ public class AtaqueService {
         ataqueRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<AtaqueDTO> buscarPorAmenazaId(Integer amenazaId) {
         return ataqueRepository.findByAmenazaId(amenazaId).stream()
                 .map(AtaqueDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<AtaqueDTO> buscarPorSeveridad(Severidad severidad) {
         return ataqueRepository.findBySeveridad(severidad).stream()
                 .map(AtaqueDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<Ataque> findAll() {
         return ataqueRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public long countAllAtaques() {
         return ataqueRepository.count();
     }
 
-    // Método para obtener los pedidos recientes (por ejemplo, los últimos 5)
+    @Transactional(readOnly = true)
     public List<Ataque> findRecentAtaques() {
         Pageable pageable = PageRequest.of(0, 4, Sort.by("fechaEvento").descending());
         return ataqueRepository.findAll(pageable).getContent();
     }
-    
-    //Cuenta los ataques por severidad
-     public int contarAtaquesPorSeveridad(Severidad severidad) {
+
+    @Transactional(readOnly = true)
+    public int contarAtaquesPorSeveridad(Severidad severidad) {
         return ataqueRepository.findBySeveridad(severidad).size();
     }
-     
-      // Encontrar ataques por severidad
-    public List<Ataque> findAtaquesBySeveridad(Severidad severidad) {
-        return ataqueRepository.findBySeveridad(severidad);
-    }
-    
-    // Contar ataques por tipo
-    public Map<String, Integer> contarAtaquesPorTipo() {
-        List<Object[]> results = ataqueRepository.countByTipo();
-        Map<String, Integer> map = new HashMap<>();
-        for (Object[] result : results) {
-            map.put((String) result[0], ((Long) result[1]).intValue());
-        }
-        return map;
-    }
-    
-    // Contar ataques por mes
-    public Map<String, Integer> contarAtaquesPorMes() {
-        List<Object[]> results = ataqueRepository.countByMonth();
-        Map<String, Integer> map = new HashMap<>();
-        for (Object[] result : results) {
-            map.put((String) result[0], ((Long) result[1]).intValue());
-        }
-        return map;
-    }
-    
-    // Encontrar ataques por amenaza
-    public List<Ataque> findAtaquesByAmenaza(Amenaza amenaza) {
-        return ataqueRepository.findByAmenaza(amenaza);
-    }
-    
-    // Obtener todos los ataques
-    public List<Ataque> findAllAtaques() {
-        return ataqueRepository.findAll();
-    }
-
 }

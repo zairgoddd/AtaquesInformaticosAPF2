@@ -243,7 +243,7 @@ public class AmenazaServiceTest {
         // Given
         NivelRiesgo nivelRiesgo = NivelRiesgo.ALTO;
         List<Amenaza> amenazas = Arrays.asList(amenaza1);
-        when(amenazaRepository.findByNivelRiesgo(nivelRiesgo)).thenReturn(amenazas);
+        when(amenazaRepository.buscarPorNivel(nivelRiesgo)).thenReturn(amenazas);
 
         // When
         List<AmenazaDTO> result = amenazaService.buscarPorNivelRiesgo(nivelRiesgo);
@@ -253,7 +253,7 @@ public class AmenazaServiceTest {
         assertEquals(1, result.size());
         assertEquals("Malware", result.get(0).getTipo());
         assertEquals(NivelRiesgo.ALTO, result.get(0).getNivelRiesgo());
-        verify(amenazaRepository).findByNivelRiesgo(nivelRiesgo);
+        verify(amenazaRepository).buscarPorNivel(nivelRiesgo);
     }
 
     @Test
@@ -262,14 +262,14 @@ public class AmenazaServiceTest {
         // Given
         NivelRiesgo nivelRiesgo = NivelRiesgo.ALTO;
         List<Amenaza> amenazas = Arrays.asList(amenaza1);
-        when(amenazaRepository.findByNivelRiesgo(nivelRiesgo)).thenReturn(amenazas);
+        when(amenazaRepository.buscarPorNivel(nivelRiesgo)).thenReturn(amenazas);
 
         // When
         int result = amenazaService.contarAmenazasPorNivelRiesgo(nivelRiesgo);
 
         // Then
         assertEquals(1, result);
-        verify(amenazaRepository).findByNivelRiesgo(nivelRiesgo);
+        verify(amenazaRepository).buscarPorNivel(nivelRiesgo);
     }
 
     @Test

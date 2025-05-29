@@ -87,7 +87,7 @@ public class AmenazaService {
 
     @Transactional(readOnly = true)
     public List<AmenazaDTO> buscarPorNivelRiesgo(NivelRiesgo nivelRiesgo) {
-        return amenazaRepository.findByNivelRiesgo(nivelRiesgo).stream()
+        return amenazaRepository.buscarPorNivel(nivelRiesgo).stream()
                 .map(AmenazaDTO::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -110,6 +110,6 @@ public class AmenazaService {
 
     @Transactional(readOnly = true)
     public int contarAmenazasPorNivelRiesgo(NivelRiesgo nivelRiesgo) {
-        return amenazaRepository.findByNivelRiesgo(nivelRiesgo).size();
+        return amenazaRepository.buscarPorNivel(nivelRiesgo).size();
     }
 }
